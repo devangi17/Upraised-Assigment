@@ -1,0 +1,10 @@
+html
+	head
+		title Job Results
+	body
+		p Following are the active jobs based on title/skillset
+		for item in item_list
+			h2 Title: #{item.title}
+			h3 Job Description: #{item.description}
+			h4 Company: #{item.company}
+			h4 Date of Creation: #{item.date_of_creation}
