@@ -1,0 +1,13 @@
+create database crawled_jobs;
+use crawled_jobs;
+create table crawled_jobs(
+title varchar(500),
+u_description mediumblob not null,
+company varchar(500),
+created_date varchar(500)
+);
+LOAD DATA INFILE "C:\\Users\\Devangi\\Desktop\\Task\\Devangi Doshi\\Assignment_\\Crawled Jobs.csv" INTO TABLE CRAWLED_JOB_DB
+FIELDS TERMINATED BY ","
+LINES TERMINATED BY "\n"
+IGNORE 1 LINES
+(title, description, company, created_date);
