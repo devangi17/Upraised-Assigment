@@ -4,6 +4,7 @@ var router = express.Router();
 var multer = require('multer');
 var path = require('path')
 var upload = multer();
+let ps = require('python-shell');
 
 
 var bodyParser = require('body-parser');
@@ -27,7 +28,7 @@ router.get('/', function(req, res){
 
 
 
-
+var dataString= '';
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(upload.array()); 
@@ -39,39 +40,35 @@ router.get('/search',function(req,res){
 	res.render('search');
 })
 
+ps.PythonShell.run('C:/Users/Devangi/Upraised Assisgnment/routes/skill_count.py', null, function (err,results) {
+  if (err) throw err;
+  dataString = results;
+});
+
 router.get('/search_active_jobs', function(req,res){
 	var detail_list =[];
-	connection.query("Select title, COUNT(*) from crawled_jobs group by created_date; Select title, COUNT(*) from crawled_jobs group by title; Select company, COUNT(*) from crawled_jobs group by company;",
+	connection.query("Select title, COUNT(*) from crawled_jobs where flag_jobs ='1' group by created_date ; Select title, COUNT(*) from crawled_jobs where flag_jobs ='1' group by title; Select company, COUNT(*) from crawled_jobs where flag_jobs ='1' group by company;",
 	 function(err, results, fields){
 		if (err) throw err;
-		
-		console.log("length");
-		
+
 		var results= JSON.stringify(results);
-			console.log(results);
-
 			res.render('search_active_jobs',{
-				jobs: results
-
-			
-
+				jobs: results,
+				counter: dataString
 		});
 		
 });
 
-	console.log("You have reached halfway")
 });
 
 router.get('/search', function(req, res){
 	var skill = req.body.skillset;
 	console.log("Passed value:", skill)
 	console.log(skill);
-		connection.query("Select * from crawled_jobs where (u_description like '%"+skill+"%' or  title like '%"+skill+"%');",
+		connection.query("Select * from crawled_jobs where flag_jobs ='1'and (u_description like '%"+skill+"%' or  title like '%"+skill+"%');",
 		function(err, rows, results, fields){
 			if(err) throw err;
 			var item_list= []
-			console.log(item_list);
-			console.log(rows);
 			for(var i =0; i< rows.length; i++){
 				var item = {
 					'title': rows[i].title,
@@ -91,11 +88,11 @@ router.post('/search', function(req, res){
 	var skill = req.body.skillset;
 	console.log("Passed value:", skill)
 	console.log(skill);
-		connection.query("Select * from crawled_jobs where (u_description like '%"+skill+"%' or  title like '%"+skill+"%');",
+		connection.query("Select * from crawled_jobs where  flag_jobs ='1'and (u_description like '%"+skill+"%' or  title like '%"+skill+"%');",
 		function(err, rows, results, fields){
 			if(err) throw err;
 			var item_list= []
-			console.log(rows.length);
+
 			for(var i =0; i< rows.length; i++){
 				var item = {
 					'title': rows[i].title,
@@ -113,4 +110,3 @@ router.post('/search', function(req, res){
 
 
 module.exports = router;
-
