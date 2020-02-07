@@ -1,9 +1,9 @@
 import pandas as pd
 import mysql.connector
 import sys
-df = pd.read_excel('C:/Users/Devangi/Upraised Assisgnment/routes/Current dictionary for skill extraction (1).xlsx', sheet_name=0, header= None) # can also index sheet by name or fetch all sheets
+df = pd.read_excel('C:/Users/Devangi/Upraised Assisgnment/routes/Current dictionary for skill extraction (1).xlsx', sheet_name=0, header= None)
 mylist = df.values.tolist()
-#print(mylist)
+
 output=[]
 def reemovNestings(m): 
     for i in m: 
